@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>CRUD com Express</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>CRUD - Express + PostgreSQL</h1>
+
+<form action="/usuarios" method="POST">
+  <input type="text" name="nome" placeholder="Nome" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <button type="submit">Adicionar</button>
+</form>
+
+<ul id="lista"></ul>
+
+<script>
+async function carregarUsuarios() {
+  const res = await fetch("/usuarios");
+  const usuarios = await res.json();
+
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  usuarios.forEach(u => {
+    lista.innerHTML += `
+      <li>
+        ${u.nome} - ${u.email}
+        <button onclick="excluir(${u.id})">Excluir</button>
+      </li>
+    `;
+  });
+}
+
+async function excluir(id) {
+  await fetch(`/usuarios/${id}`, { method: "DELETE" });
+  carregarUsuarios();
+}
+
+carregarUsuarios();
+</script>
+
+</body>
+</html>
